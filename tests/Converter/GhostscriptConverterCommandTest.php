@@ -1,22 +1,19 @@
 <?php
 
-/*
- * This file is part of the PDF Version Converter.
- *
- * (c) Thiago Rodrigues <xthiago@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Xthiago\PDFVersionConverter\Converter;
 
-use \PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Xthiago\PDFVersionConverter\Guesser\RegexGuesser;
 
 /**
+ * This file is part of the PDF Version Converter.
+ * (c) Thiago Rodrigues <xthiago@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
  * @author Thiago Rodrigues <xthiago@gmail.com>
  */
-class GhostscriptConverterCommandTest extends PHPUnit_Framework_TestCase
+class GhostscriptConverterCommandTest extends TestCase
 {
     protected $tmp;
 
@@ -34,27 +31,29 @@ class GhostscriptConverterCommandTest extends PHPUnit_Framework_TestCase
         'v2.0.pdf',
     );
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->tmp = __DIR__.'/../files/stage/';
+        $this->tmp = __DIR__ . '/../files/stage/';
 
-        if (!file_exists($this->tmp))
+        if (!file_exists($this->tmp)) {
             mkdir($this->tmp);
+        }
 
         $this->copyFilesToStageArea();
     }
 
     protected function copyFilesToStageArea()
     {
-        foreach($this->files as $file) {
-            if (!copy(__DIR__.'/../files/repo/'. $file, $this->tmp . $file))
+        foreach ($this->files as $file) {
+            if (!copy(__DIR__ . '/../files/repo/' . $file, $this->tmp . $file)) {
                 throw new \RuntimeException("Can't create test file.");
+            }
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
-        foreach($this->files as $file) {
+        foreach ($this->files as $file) {
             unlink($this->tmp . $file);
         }
     }
@@ -62,12 +61,11 @@ class GhostscriptConverterCommandTest extends PHPUnit_Framework_TestCase
     /**
      * @param string $file
      * @param $newVersion
-     *
      * @dataProvider filesProvider
      */
     public function testMustConvertPDFVersionWithSuccess($file, $newVersion)
     {
-        $tmpFile = $this->tmp .'/'. uniqid('pdf_version_changer_test_') . '.pdf';
+        $tmpFile = $this->tmp . '/' . uniqid('pdf_version_changer_test_', false) . '.pdf';
 
         $command = new GhostscriptConverterCommand();
         $command->run(
@@ -85,13 +83,12 @@ class GhostscriptConverterCommandTest extends PHPUnit_Framework_TestCase
     /**
      * @param string $invalidFile
      * @param $newVersion
-     *
      * @dataProvider invalidFilesProvider
      * @expectedException RuntimeException
      */
     public function testMustThrowException($invalidFile, $newVersion)
     {
-        $tmpFile = $this->tmp .'/'. uniqid('pdf_version_changer_test_') . '.pdf';
+        $tmpFile = $this->tmp . '/' . uniqid('pdf_version_changer_test_', false) . '.pdf';
 
         $command = new GhostscriptConverterCommand();
         $command->run(
@@ -131,9 +128,9 @@ class GhostscriptConverterCommandTest extends PHPUnit_Framework_TestCase
     {
         return array(
             // file, new version
-            array(__DIR__.'/../files/stage/text', '1.4'),
-            array(__DIR__.'/../files/stage/image.png', '1.5'),
-            array(__DIR__.'/../files/stage/dont-exists.pdf', '1.5'),
+            array(__DIR__ . '/../files/stage/text', '1.4'),
+            array(__DIR__ . '/../files/stage/image.png', '1.5'),
+            array(__DIR__ . '/../files/stage/dont-exists.pdf', '1.5'),
         );
     }
 }

@@ -1,21 +1,19 @@
 <?php
 
-/*
- * This file is part of the PDF Version Converter.
- *
- * (c) Thiago Rodrigues <xthiago@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 namespace Xthiago\PDFVersionConverter\Guesser;
 
-use \PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
+ * This file is part of the PDF Version Converter.
+ * (c) Thiago Rodrigues <xthiago@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
  * @author Thiago Rodrigues <xthiago@gmail.com>
  */
-class RegexGuesserTest extends PHPUnit_Framework_TestCase
+class RegexGuesserTest extends TestCase
+
 {
     protected static $files = array(
         'text',
@@ -35,23 +33,23 @@ class RegexGuesserTest extends PHPUnit_Framework_TestCase
 
     protected $stageDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->tmpDir = __DIR__.'/../files/repo/';
-        $this->stageDir = __DIR__.'/../files/stage/';
+        $this->tmpDir = __DIR__ . '/../files/repo/';
+        $this->stageDir = __DIR__ . '/../files/stage/';
 
         if (!file_exists($this->stageDir))
             mkdir($this->stageDir);
 
-        foreach(self::$files as $file) {
+        foreach (self::$files as $file) {
             if (!copy($this->tmpDir . $file, $this->stageDir . $file))
                 throw new \RuntimeException("Can't create test file.");
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
-        foreach(self::$files as $file) {
+        foreach (self::$files as $file) {
             unlink($this->stageDir . $file);
         }
     }
@@ -59,7 +57,6 @@ class RegexGuesserTest extends PHPUnit_Framework_TestCase
     /**
      * @param string $file
      * @param string $expectedVersion
-     *
      * @dataProvider filesProvider
      */
     public function testMustReturnRightVersion($file, $expectedVersion)
@@ -72,7 +69,6 @@ class RegexGuesserTest extends PHPUnit_Framework_TestCase
 
     /**
      * @param string $file
-     *
      * @dataProvider invalidFilesProvider
      * @expectedException RuntimeException
      */
@@ -106,7 +102,7 @@ class RegexGuesserTest extends PHPUnit_Framework_TestCase
      */
     public static function invalidFilesProvider()
     {
-        $stageDir = __DIR__.'/../files/stage/';
+        $stageDir = __DIR__ . '/../files/stage/';
 
         return array(
             // file
