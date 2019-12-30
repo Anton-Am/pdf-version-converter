@@ -38,12 +38,14 @@ class RegexGuesserTest extends TestCase
         $this->tmpDir = __DIR__ . '/../files/repo/';
         $this->stageDir = __DIR__ . '/../files/stage/';
 
-        if (!file_exists($this->stageDir))
+        if (!file_exists($this->stageDir)) {
             mkdir($this->stageDir);
+        }
 
         foreach (self::$files as $file) {
-            if (!copy($this->tmpDir . $file, $this->stageDir . $file))
+            if (!copy($this->tmpDir . $file, $this->stageDir . $file)) {
                 throw new \RuntimeException("Can't create test file.");
+            }
         }
     }
 
@@ -70,12 +72,12 @@ class RegexGuesserTest extends TestCase
     /**
      * @param string $file
      * @dataProvider invalidFilesProvider
-     * @expectedException RuntimeException
      */
     public function testMustThrowException($file)
     {
+        $this->expectException('RuntimeException');
         $guesser = new RegexGuesser();
-        $version = $guesser->guess($file);
+        $guesser->guess($file);
     }
 
     /**

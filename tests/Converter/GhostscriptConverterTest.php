@@ -4,6 +4,8 @@ namespace Xthiago\PDFVersionConverter\Converter;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This file is part of the PDF Version Converter.
@@ -28,12 +30,13 @@ class GhostscriptConverterTest extends TestCase
 
     /**
      * @param string $file
-     * @param $newVersion
+     * @param string $newVersion
      * @dataProvider filesProvider
      */
     public function testMustConvertPDFVersionWithSuccess($file, $newVersion)
     {
-        $fs = $this->prophesize('\Symfony\Component\Filesystem\Filesystem');
+        /** @var ObjectProphecy|Filesystem $fs */
+        $fs = $this->prophesize('Symfony\Component\Filesystem\Filesystem');
         $fs->exists(Argument::type('string'))
             ->willReturn(true)
             ->shouldBeCalled();
@@ -45,6 +48,7 @@ class GhostscriptConverterTest extends TestCase
             ->willReturn(true)
             ->shouldBeCalled();
 
+        /** @var ObjectProphecy|GhostscriptConverterCommand $command */
         $command = $this->prophesize('Xthiago\PDFVersionConverter\Converter\GhostscriptConverterCommand');
         $command->run(
             $file,

@@ -33,7 +33,7 @@ class GhostscriptConverterCommandTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tmp = __DIR__ . '/../files/stage/';
+        $this->tmp = realpath(__DIR__ . '/../files/stage/') . '/';
 
         if (!file_exists($this->tmp)) {
             mkdir($this->tmp);
@@ -56,18 +56,20 @@ class GhostscriptConverterCommandTest extends TestCase
         foreach ($this->files as $file) {
             unlink($this->tmp . $file);
         }
+        array_map('unlink', glob($this->tmp . 'pdf_version_changer_test_*'));
     }
 
     /**
      * @param string $file
-     * @param $newVersion
+     * @param string $newVersion
      * @dataProvider filesProvider
      */
     public function testMustConvertPDFVersionWithSuccess($file, $newVersion)
     {
-        $tmpFile = $this->tmp . '/' . uniqid('pdf_version_changer_test_', false) . '.pdf';
+        $tmpFile = $this->tmp . uniqid('pdf_version_changer_test_', false) . '.pdf';
 
         $command = new GhostscriptConverterCommand();
+
         $command->run(
             $file,
             $tmpFile,
@@ -82,13 +84,13 @@ class GhostscriptConverterCommandTest extends TestCase
 
     /**
      * @param string $invalidFile
-     * @param $newVersion
+     * @param string $newVersion
      * @dataProvider invalidFilesProvider
-     * @expectedException RuntimeException
      */
     public function testMustThrowException($invalidFile, $newVersion)
     {
-        $tmpFile = $this->tmp . '/' . uniqid('pdf_version_changer_test_', false) . '.pdf';
+        $this->expectException('RuntimeException');
+        $tmpFile = $this->tmp . uniqid('pdf_version_changer_test_', false) . '.pdf';
 
         $command = new GhostscriptConverterCommand();
         $command->run(
