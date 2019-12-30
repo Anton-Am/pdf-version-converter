@@ -1,5 +1,9 @@
 composer.phar
+composer.lock
+.idea
 .vagrant
 vendor/*
 tests/files/stage/*
 tests/files/tmp/*
+tests/.phpunit.result.cache
+docker/.env
